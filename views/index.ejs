@@ -4,7 +4,7 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <title>F5 APM Delegation Portal</title>
+    <title>F5 ASM Delegation Portal</title>
   <!--
     <link rel="stylesheet" href="http://ajax.googleapis.com/ajax/libs/angular_material/1.1.0-rc2/angular-material.min.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Roboto:300,400,500,700,400italic">
@@ -26,23 +26,13 @@
     <![endif]-->
 </head>
 
-<body ng-app="ApmPortal" ng-cloak layout="row" ng-controller="MainCtrl" layout-fill  >
+<body ng-app="AsmPortal" ng-cloak layout="row" ng-controller="MainCtrl" layout-fill  >
   <div flex layout="column">
     <div>
     <md-toolbar  class="md-hue-2" layout-align="center" ng-controller="NavCtrl">
       <div class="md-toolbar-tools" layout="row" >
         <img src="/images/logo.svg">
-        <h2>APM Delegation Demo Portal</h2>
-        <span flex></span>
-          <span  ng-show="isLoggedIn()" >{{currentUser()}}</span>
-          <md-button class="md-icon-button" ng-show="isLoggedIn()" ui-sref="logout">
-              <i class="material-icons" style="color:rgba(255,255,255,0.87);">&#xE879;</i>
-                <md-tooltip md-direction="dow">Logout</md-tooltip>
-          </md-button>
-          <md-button class="md-icon-button" ng-hide="isLoggedIn()" ui-sref="login">
-            <i class="material-icons" style="color:rgba(255,255,255,0.87);" >&#xE879;</i>
-            <md-tooltip md-direction="dow">Login</md-tooltip>
-          </md-button>
+        <h2>ASM Delegation Demo Portal</h2>
       </div>
     </md-toolbar>
   </div>
@@ -60,27 +50,11 @@
             </md-button>
           </md-fab-trigger>
           <md-fab-actions>
-              <md-button aria-label="Edit Categories" class="md-fab md-raised md-mini" hui-sref="category" href="/#/category">
-                <md-tooltip md-direction="right">Edit Categories</md-tooltip>
+              <md-button aria-label="Edit Categories" class="md-fab md-raised md-mini" hui-sref="blacklist" href="/#/blacklist">
+                <md-tooltip md-direction="right">Edit Black Lists</md-tooltip>
                 <i class="material-icons myfab" >&#xE051;</i>
               </md-button>
-              <md-button aria-label="Edit ACLs" class="md-fab md-raised md-mini" hui-sref="acl" href="/#/acls">
-                <md-tooltip md-direction="right">Edit ACLs</md-tooltip>
-                <i class="material-icons myfab" >&#xE051;</i>
-              </md-button>
-              <md-button aria-label="Edit Network Locations" class="md-fab md-raised md-mini" hui-sref="networklocation" href="/#/networklocation">
-                <md-tooltip md-direction="right">Edit Network Location</md-tooltip>
-                <i class="material-icons myfab" >&#xE051;</i>
-              </md-button>
-              <md-button aria-label="Add user" class="md-fab md-raised md-mini" href="/#/register" ng-if="isAdmin()" >
-                <md-tooltip md-direction="right">Add user</md-tooltip>
-                <i class="material-icons myfab" >&#xE869;</i>
-              </md-button>
-              <md-button aria-label="Edit Groups" class="md-fab md-raised md-mini" href="/#/editgroups" ng-if="isAdmin()">
-                <md-tooltip md-direction="right">Edit Groups</md-tooltip>
-                <i class="material-icons myfab" >&#xE869;</i>
-              </md-button>
-              <md-button aria-label="APM Management" class="md-fab md-raised md-mini" href="/#/apmmgt" ng-if="isAdmin()">
+              <md-button aria-label="APM Management" class="md-fab md-raised md-mini" href="/#/apmmgt" >
                 <md-tooltip md-direction="right">APM Management</md-tooltip>
                 <i class="material-icons myfab" >&#xE869;</i>
               </md-button>
@@ -95,19 +69,7 @@
     </md-content>
   </div>
     <!-- end div class container -->
-    <!-- bottom sheet -->
-    <!--
-      <div flex="none" layout="row" layout-align="bottom center" style="height:50px;background-color:rgb(40,53,147);">
-        <md-list flex layout="row" layout-align="center center">
-          <md-list-item >
-            <md-button class="md-grid-item-content" >
-              <div class="md-grid-text">test</div>
-            </md-button>
-          </md-list-item>
-        </md-list>
-      </div>
-    -->
-    <!-- endbottom sheet -->
+    
   </div>
    <!-- Angular Material requires Angular.js Libraries -->
   <script src="./javascripts/angular.min.js"></script>
