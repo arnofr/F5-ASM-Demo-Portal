@@ -29,7 +29,7 @@
 <body ng-app="AsmPortal" ng-cloak layout="row" ng-controller="MainCtrl" layout-fill  >
   <div flex layout="column">
     <div>
-    <md-toolbar  class="md-hue-2" layout-align="center" ng-controller="NavCtrl">
+    <md-toolbar  class="md-hue-2" layout-align="center" >
       <div class="md-toolbar-tools" layout="row" >
         <img src="/images/logo.svg">
         <h2>ASM Delegation Demo Portal</h2>
@@ -50,7 +50,7 @@
             </md-button>
           </md-fab-trigger>
           <md-fab-actions>
-              <md-button aria-label="Edit Categories" class="md-fab md-raised md-mini" hui-sref="blacklist" href="/#/blacklist">
+              <md-button aria-label="Edit Black Lists" class="md-fab md-raised md-mini" hui-sref="policies" href="/#/policies">
                 <md-tooltip md-direction="right">Edit Black Lists</md-tooltip>
                 <i class="material-icons myfab" >&#xE051;</i>
               </md-button>
