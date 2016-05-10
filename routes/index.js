@@ -3,10 +3,10 @@ var router = express.Router();
 var request = require('request');
 var async = require('async');
 
-var apm = {};
-apm.ip="192.168.142.15";
-apm.username="admin";
-apm.password="admin";
+var asm = {};
+asm.ip="192.168.142.14";
+asm.username="admin";
+asm.password="admin";
 
 /* GET home page. */
 router.get('/', function(req, res, next) {
@@ -19,19 +19,31 @@ router.get('/index.html', function(req, res, next) {
 router.get('/policies.html', function(req, res, next) {
   res.render('policies', { title: 'ASM Portal' });
 });
-router.get('/apmmgt.html', function(req, res, next) {
-  res.render('apmmgt', { title: 'ASM Portal' });
+router.get('/asmmgt.html', function(req, res, next) {
+  res.render('asmmgt', { title: 'ASM Portal' });
 });
 router.get('/editpolicy.html', function(req, res, next) {
   res.render('editpolicy', { title: 'ASM Portal' });
 });
 
 //routing for api requests
+router.get('/getasmconfig', function(req, res, next) {
+
+  res.json({"asmip": asm.ip,"asmusername":asm.username,"asmpassword":asm.password});
+});
+
+router.put('/changeasmconfig', function(req, res, next) {
+  asm.ip=req.body.newip;
+  asm.username=req.body.newusername;
+  asm.password=req.body.newpassword;
+  console.log("asm new config:"+asm.ip,asm.username,asm.password);
+  res.json("{OK}");
+});
 //getting all system signatures to build the signature table list
 router.get('/allsignatures/', function(req, res, next) {
   console.log("retrieving all ASM  Signatures sets ");
   var options = {
-        url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/signature-systems/?$select=name,id",
+        url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/signature-systems/?$select=name,id",
         method: 'GET',
         strictSSL : false, //no certificate validation
         rejectUnauthorized : false //no certificate validation
@@ -39,7 +51,7 @@ router.get('/allsignatures/', function(req, res, next) {
   request(options, function (error, response, body) {
     if (!error  && response.statusCode == 200) {
       console.log("ASM GET all signature-sets done");
-      console.log(JSON.parse(body).items);
+      //console.log(JSON.parse(body).items);
       res.json(JSON.parse(body).items);
       //console.log(JSON.parse(body).items);
     } else {
@@ -53,7 +65,7 @@ router.get('/allsignatures/', function(req, res, next) {
 router.get('/getsignatures/:policyid', function(req, res, next) {
   console.log("retrieving ASM policy Signatures for "+req.params.policyid);
   var options = {
-        url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/policies/"+req.params.policyid+"/signature-sets",
+        url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/policies/"+req.params.policyid+"/signature-sets",
         method: 'GET',
         strictSSL : false, //no certificate validation
         rejectUnauthorized : false //no certificate validation
@@ -77,7 +89,7 @@ router.get('/getsignatures/:policyid', function(req, res, next) {
         //now we query each sigset to have corresponding systems signature sets
 
         var options = {
-              url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/signature-sets/"+signaturesetreferenceid+"?$select=systems",
+              url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/signature-sets/"+signaturesetreferenceid+"?$select=systems",
               method: 'GET',
               strictSSL : false, //no certificate validation
               rejectUnauthorized : false //no certificate validation
@@ -103,7 +115,7 @@ router.get('/getsignatures/:policyid', function(req, res, next) {
         //callback async
         //policysigsystemsets now contains a table of sytem signature sets sid
 
-        console.log(policysigsystemsets);
+        //console.log(policysigsystemsets);
         res.json(JSON.stringify(policysigsystemsets));
       });//async
 
@@ -121,7 +133,7 @@ router.get('/getsignatures/:policyid', function(req, res, next) {
 router.get('/getpolicies', function(req, res, next) {
   console.log("retrieving ASM policies");
   var options = {
-        url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/policies?$select=name,signatureSetReference,urlReference,id",
+        url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/policies?$select=name,signatureSetReference,urlReference,id",
         method: 'GET',
         strictSSL : false, //no certificate validation
         rejectUnauthorized : false //no certificate validation
@@ -139,8 +151,8 @@ router.get('/getpolicies', function(req, res, next) {
 }); //end router get policies
 
 router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
-  console.log("push sig :"+req.params.policyid);
-  console.log("received sig to push "+req.body.newsigset);
+  //console.log("push sig :"+req.params.policyid);
+  //console.log("received sig to push "+req.body.newsigset);
 
   applypolicy = function (error, response, body) {
     if (!error  && response.statusCode == 201) {
@@ -150,7 +162,7 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
       var jsonpayload = {};
       jsonpayload.policyReference = {"link":"https://localhost/mgmt/tm/asm/policies/"+req.params.policyid};
       var options = {
-            url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/tasks/apply-policy",
+            url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/tasks/apply-policy",
             method: 'POST',
             json: jsonpayload,
             strictSSL : false, //no certificate validation
@@ -174,7 +186,7 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
   addsigset  = function (error, response, body) {
     if (!error  && response.statusCode == 201) {
       console.log("ASM creating sigset done");
-      console.log("newsigset id "+response.body.id);
+      //console.log("newsigset id "+response.body.id);
 
       jsonpayload = {};
       jsonpayload.alarm = "true";
@@ -182,7 +194,7 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
       jsonpayload.learn = "true";
       jsonpayload.signatureSetReference = {"link"  : "https://localhost/mgmt/tm/asm/signature-sets/"+response.body.id};
       var options = {
-            url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/policies/" + req.params.policyid + "/signature-sets",
+            url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/policies/" + req.params.policyid + "/signature-sets",
             method: 'POST',
             json: jsonpayload,
             strictSSL : false, //no certificate validation
@@ -205,9 +217,9 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
         jsonpayload.systems.push({'systemReference' :{"link" : "https://localhost/mgmt/tm/asm/signature-systems/"+req.body.newsigset[sig] +"?ver=12.0.0"}})
       }
       jsonpayload.name="customset_"+req.body.policyname;
-      console.log(JSON.stringify(jsonpayload));
+      //console.log(JSON.stringify(jsonpayload));
       var options = {
-            url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/signature-sets/",
+            url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/signature-sets/",
             method: 'POST',
             json: jsonpayload,
             strictSSL : false, //no certificate validation
@@ -227,7 +239,7 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
       //DELETING SIG SET attached to  policy
       //$url_delete_sigset_policy = "https://" . $selected_device . "/mgmt/tm/asm/policies/" . $selected_policy . "/signature-sets";
 			var options = {
-            url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/policies/"+req.params.policyid+"/signature-sets/",
+            url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/policies/"+req.params.policyid+"/signature-sets/",
             method: 'DELETE',
             strictSSL : false, //no certificate validation
             rejectUnauthorized : false //no certificate validation
@@ -241,7 +253,7 @@ router.put('/pushsignaturestopolicy/:policyid', function(req, res, next) {
   // ---->> need to delete existin sigset with same name ... we only have a name for filter and get id
 	// !!! can use filter with delete : DELETE https://192.168.142.13/mgmt/tm/asm/signature-sets/?$filter=name eq test_no-template
   var options = {
-        url: "https://"+apm.username+":"+apm.password+"@"+apm.ip+"/mgmt/tm/asm/signature-sets/?$filter=name eq "+"customset_"+req.body.policyname,
+        url: "https://"+asm.username+":"+asm.password+"@"+asm.ip+"/mgmt/tm/asm/signature-sets/?$filter=name eq "+"customset_"+req.body.policyname,
         method: 'DELETE',
         strictSSL : false, //no certificate validation
         rejectUnauthorized : false //no certificate validation

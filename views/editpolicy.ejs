@@ -3,10 +3,12 @@
     <md-toolbar class="md-table-toolbar md-default" >
       <div class="md-toolbar-tools" >
           <span>Policy: {{currentpolicy.name}}</span>
+          <span flex></span>
+          <md-progress-circular md-diameter='50%' md-mode="indeterminate" ng-hide="progressbar"></md-progress-circular>
       </div>
     </md-toolbar>
     <md-table-container >
-      <table md-table   md-progress="promise">
+      <table md-table >
         <thead md-head >
           <tr md-row>
             <th md-column md-numeric>#</th>
