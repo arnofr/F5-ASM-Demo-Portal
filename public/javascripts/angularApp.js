@@ -156,7 +156,7 @@ app.factory('policies', ['$http', function($http){
     if (p.policies[policyarrayid].signatureSets == undefined) {
       console.log("Policy signatureSets is undefined, retrieving from ASM ...")
       $http.get('/getsignatures/'+p.policies[policyarrayid].id).then(function(data){
-        if (data.data == "{KO}") {
+        if (data.data == "{OK}") {
           showSimpleToast('top right',"Error, cannot get policy signatures from ASM");
         } else {
           p.policies[policyarrayid].signatureSets=[];
